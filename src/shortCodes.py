@@ -1,16 +1,17 @@
 import math
 
-def shortCode_generator(text: str)-> dict:
-    distinctChars = list(set(text))
+def shortCode_generator(chars: list)-> dict:
+    if not chars:
+        return {}
+    chars = sorted(chars)
 
-    distinctChars.sort()
-    numOfBits  = math.ceil(math.log2(len(distinctChars)))
+    numOfBits  = max(1, math.ceil(math.log2(len(chars))))
 
     result = {}
-    for i in range(distinctChars):
-        result[distinctChars[i]] =  f"{i:0{numOfBits}b}" 
+    for i in range(len(chars)):
+        result[chars[i]] =  f"{i:0{numOfBits}b}" 
 
-    return result
+    return result, numOfBits
     
 
                            

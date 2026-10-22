@@ -12,16 +12,21 @@ class HuffmanNode:
 # overloading the comparison method
     def __lt__(self, other):
         return self.freq < other.freq
+    
+
+def get_rare_chars(text: str, minLimit: float) -> list:
+    threshold = minLimit * len(text)
+    return sorted(ch for ch, f in Counter(text).items() if f <= threshold)
 
 def build_huffman_tree(text: str, minLimit: float) -> HuffmanNode:
+    
     frequency = Counter(text)
-
     minLimit *= len(text) 
 
     heap=[]
     others = HuffmanNode(char = "others", is_others = True)
     for char, freq in frequency.items():
-        if freq<= minLimit:
+        if freq <= minLimit:
             others.freq+= freq
         else:
             node = HuffmanNode(char, freq)
@@ -29,7 +34,6 @@ def build_huffman_tree(text: str, minLimit: float) -> HuffmanNode:
         # heapq.heappush(heap, node)
 
     if others.freq > 0: 
-
         heapq.heappush(heap, others)
 
     while(len(heap)> 1):
@@ -53,12 +57,12 @@ def generated_codes(root: HuffmanNode, currentCode: str="", codes: dict = None) 
     if root is None:
         return codes
 
-    if root.char is not None:
-        codes[root.char] = currentCode
-        return
+    if root.char is not None:  #leaf
+        codes[root.char] = currentCode if currentCode else '0'
+        return codes
 
-    generated_codes(root.left, currentCode + "0", codes)
-    generated_codes(root.right, currentCode + "1", codes)
+    generated_codes(root.left, currentCode + "1", codes)
+    generated_codes(root.right, currentCode + "0", codes)
 
     return codes
 
